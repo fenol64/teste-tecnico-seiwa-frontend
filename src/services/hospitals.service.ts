@@ -33,8 +33,8 @@ export const hospitalsService = {
     await api.delete(`/hospitals/${id}`);
   },
 
-  async getDoctors(hospitalId: string, page = 1, pageSize = 10): Promise<PaginatedResponse<Doctor>> {
-    const response = await api.get<PaginatedResponse<Doctor>>(`/hospitals/${hospitalId}/doctors/?page=${page}&page_size=${pageSize}`);
+  async getDoctors(hospitalId: string, page = 1, pageSize = 10): Promise<Array<Doctor>> {
+    const response = await api.get<Array<Doctor>>(`/hospitals/${hospitalId}/doctors/?page=${page}&page_size=${pageSize}`);
     return response.data;
   }
 };

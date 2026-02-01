@@ -13,6 +13,8 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
     const { hospitalId } = route.params;
     const [hospital, setHospital] = useState<Hospital | null>(null);
     const [doctors, setDoctors] = useState<Doctor[]>([]);
+    const [productions, setProductions] = useState<Production[]>([]);
+    const [repasses, setRepasses] = useState<Repasse[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,13 +24,17 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
     const loadData = async () => {
         try {
             setLoading(true);
-            const [hospRes, docsRes] = await Promise.all([
+            const [hospRes, docsRes, prodsData, repassesData] = await Promise.all([
                 hospitalsService.getById(hospitalId),
-                hospitalsService.getDoctors(hospitalId)
+                hospitalsService.getDoctors(hospitalId),
+                productionsService.getByHospital(hospitalId),
+                repassesService.getByHospital(hospitalId)
             ]);
             console.log('Hospital details loaded:', hospRes, docsRes);
             setHospital(hospRes);
             setDoctors(docsRes);
+            setProductions(prodsData);
+            setRepasses(repassesData);
         } catch (error) {
              console.error(error);
              const msg = 'Falha ao carregar detalhes do hospital';
@@ -38,6 +44,23 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
             setLoading(false);
         }
     };
+
+    // Calculations
+    let plantaoCount = 0;
+    let consultaCount = 0;
+    const consolidatedRepasses = [];
+    const pendingRepasses = [];
+
+    for (const prod of productions) {
+        if (prod.type === 'plantao') plantaoCount++;
+        else if (prod.type === 'consulta') consultaCount++;
+    }
+    for (const rep of repasses) {
+        if (rep.status === 'consolidado') consolidatedRepasses.push(rep);
+        else if (rep.status === 'pendente') pendingRepasses.push(rep);
+    }
+    const totalConsolidatedValue = consolidatedRepasses.reduce((acc, curr) => acc + Number(curr.valor), 0);
+    const totalPendingValue = pendingRepasses.reduce((acc, curr) => acc + Number(curr.valor), 0);
 
     if (loading) {
         return (
@@ -62,6 +85,40 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
                 <View style={styles.card}>
                     <Text variant="title">{hospital.name}</Text>
                     <Text variant="body">{hospital.address}</Text>
+                </View>
+
+                 {/* Financial Summary */}
+                <Text variant="title" style={styles.sectionTitle}>Financeiro</Text>
+                <View style={[styles.statsRow, { marginBottom: 20 }]}>
+                    <View style={[styles.statCard, { backgroundColor: '#e8f5e9' }]}>
+                        <Text variant="caption">Consolidado</Text>
+                        <Text variant="title" style={{ color: '#2e7d32' }}>R$ {totalConsolidatedValue.toFixed(2)}</Text>
+                        <Text variant="caption">{consolidatedRepasses.length} repasses</Text>
+                    </View>
+                    <View style={[styles.statCard, { backgroundColor: '#e3f2fd' }]}>
+                        <Text variant="caption">Pendente</Text>
+                        <Text variant="title" style={{ color: '#1565c0' }}>R$ {totalPendingValue.toFixed(2)}</Text>
+                        <Text variant="caption">{pendingRepasses.length} repasses</Text>
+                    </View>
+                </View>
+
+                {/* Production Stats */}
+                <Text variant="title" style={styles.sectionTitle}>Resumo de Produção</Text>
+                <View style={[styles.card, { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }]}>
+                    <View style={{alignItems: 'center'}}>
+                        <Text variant="body">Total</Text>
+                        <Text variant="title">{productions.length}</Text>
+                    </View>
+                    <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
+                    <View style={{alignItems: 'center'}}>
+                        <Text variant="body">Plantões</Text>
+                        <Text variant="body" style={{fontWeight: 'bold'}}>{plantaoCount}</Text>
+                    </View>
+                     <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
+                    <View style={{alignItems: 'center'}}>
+                        <Text variant="body">Consultas</Text>
+                        <Text variant="body" style={{fontWeight: 'bold'}}>{consultaCount}</Text>
+                    </View>
                 </View>
 
                 {/* Doctors List */}
@@ -91,4 +148,6 @@ const styles = StyleSheet.create({
     card: { padding: 16, backgroundColor: '#f9f9f9', borderRadius: 8, marginBottom: 20, borderWidth: 1, borderColor: '#eee' },
     itemRow: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
     sectionTitle: { marginBottom: 10, marginTop: 10, fontSize: 18, fontWeight: 'bold' },
+    statsRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 16 },
+    statCard: { flex: 1, padding: 16, borderRadius: 8, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2, elevation: 2 },
 });

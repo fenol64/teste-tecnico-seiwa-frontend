@@ -54,5 +54,10 @@ export const repassesService = {
   async getStats(doctorId: string): Promise<RepasseStats> {
       const response = await api.get<RepasseStats>(`/repasses/stats/${doctorId}`);
       return response.data;
+  },
+
+  async getByHospital(hospitalId: string): Promise<Repasse[]> {
+    const response = await api.get<Repasse[]>(`/repasses/hospital/${hospitalId}`);
+    return response.data;
   }
 };
