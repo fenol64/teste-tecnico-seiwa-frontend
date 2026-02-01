@@ -5,7 +5,7 @@ export interface Production {
   id: string;
   doctor_id: string;
   hospital_id: string;
-  type: 'plantao' | 'consulta';
+  type: 'shift' | 'consultation' | 'plantao' | 'consulta'; // Support legacy
   date: string;
   description?: string;
   created_at: string;
@@ -14,7 +14,7 @@ export interface Production {
 export interface CreateProductionDTO {
   doctor_id: string;
   hospital_id: string;
-  type: 'plantao' | 'consulta';
+  type: 'shift' | 'consultation';
   date: string;
   description?: string;
 }

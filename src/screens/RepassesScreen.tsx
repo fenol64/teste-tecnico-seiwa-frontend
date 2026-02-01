@@ -52,19 +52,25 @@ export const RepassesScreen: React.FC<any> = ({ navigation }) => {
           data={data}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('RepasseDetail', { repasseId: item.id })}>
-              <View style={styles.row}>
-                <Text style={styles.amount}>R$ {item.valor}</Text>
-                <Text style={[styles.status, { color: item.status === 'consolidado' ? 'green' : 'orange' }]}>
-                    {item.status.toUpperCase()}
+          renderItem={({ item }) => {
+            const displayAmount = item.amount || item.valor;
+            const status = item.status?.toLowerCase();
+            const isConsolidated = status === 'consolidated' || status === 'consolidado';
+
+            return (
+              <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('RepasseDetail', { repasseId: item.id })}>
+                <View style={styles.row}>
+                  <Text style={styles.amount}>R$ {displayAmount}</Text>
+                  <Text style={[styles.status, { color: isConsolidated ? 'green' : 'orange' }]}>
+                      {item.status.toUpperCase()}
+                  </Text>
+                </View>
+                <Text variant="caption">
+                  Produção: {productions[item.production_id] || 'unknown'}
                 </Text>
-              </View>
-              <Text variant="caption">
-                Produção: {productions[item.production_id] || 'Desconhecido'}
-              </Text>
-            </TouchableOpacity>
-          )}
+              </TouchableOpacity>
+            );
+          }}
         />
       )}
     </SafeAreaView>

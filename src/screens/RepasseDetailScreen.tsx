@@ -54,6 +54,9 @@ export const RepasseDetailScreen = ({ route, navigation }: any) => {
     if (loading) return <SafeAreaView style={styles.container}><ActivityIndicator size="large" color={theme.colors.primary} /></SafeAreaView>;
     if (!details) return null;
 
+    const repAmount = details.repasse.amount || details.repasse.valor;
+    const isConsolidated = details.repasse.status?.toLowerCase() === 'consolidated' || details.repasse.status?.toLowerCase() === 'consolidado';
+
     return (
         <SafeAreaView style={styles.container}>
              <View style={styles.header}>
@@ -84,8 +87,8 @@ export const RepasseDetailScreen = ({ route, navigation }: any) => {
 
                  <View style={styles.section}>
                     <Text variant="body" style={styles.label}>Informações do Repasse</Text>
-                    <Text variant="title" style={{color: theme.colors.primary}}>R$ {details.repasse.valor}</Text>
-                    <Text variant="body" style={{ color: details.repasse.status === 'consolidado' ? 'green' : 'orange', fontWeight: 'bold', marginTop: 8 }}>
+                    <Text variant="title" style={{color: theme.colors.primary}}>R$ {repAmount}</Text>
+                    <Text variant="body" style={{ color: isConsolidated ? 'green' : 'orange', fontWeight: 'bold', marginTop: 8 }}>
                         {details.repasse.status.toUpperCase()}
                     </Text>
                 </View>

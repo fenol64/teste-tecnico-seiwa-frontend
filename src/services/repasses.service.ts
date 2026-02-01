@@ -4,26 +4,35 @@ import { PaginatedResponse } from './doctors.service';
 export interface Repasse {
   id: string;
   production_id: string;
-  valor: string; // The API returns number as string in the example schema sometimes? Swagger says 'total_pendente_valor' is string, but CreateRepasseDTO 'valor' is number or string. Let's use string for safety as money.
-  status: 'pendente' | 'consolidado';
+  amount: string;
+  valor?: string; // Fallback for legacy API
+  status: 'pending' | 'consolidated' | 'pendente' | 'consolidado'; // Support legacy
   created_at: string;
   updated_at?: string;
 }
 
 export interface CreateRepasseDTO {
   production_id: string;
-  valor: number;
-  status?: 'pendente' | 'consolidado';
+  amount: number;
+  status?: 'pending' | 'consolidated';
 }
 
 export interface RepasseStats {
   doctor_id: string;
+  // English fields
+  period_start?: string;
+  period_end?: string;
+  total_pending_count?: number;
+  total_pending_value?: string;
+  total_consolidated_count?: number;
+  total_consolidated_value?: string;
+  // Portuguese fields (Legacy Fallback)
   periodo_inicio?: string;
   periodo_fim?: string;
-  total_pendente_qtd: number;
-  total_pendente_valor: string;
-  total_consolidado_qtd: number;
-  total_consolidado_valor: string;
+  total_pendente_qtd?: number;
+  total_pendente_valor?: string;
+  total_consolidado_qtd?: number;
+  total_consolidado_valor?: string;
 }
 
 export const repassesService = {

@@ -46,21 +46,23 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
     };
 
     // Calculations
-    let plantaoCount = 0;
-    let consultaCount = 0;
+    let shiftCount = 0;
+    let consultationCount = 0;
     const consolidatedRepasses = [];
     const pendingRepasses = [];
 
     for (const prod of productions) {
-        if (prod.type === 'plantao') plantaoCount++;
-        else if (prod.type === 'consulta') consultaCount++;
+        const type = prod.type?.toLowerCase();
+        if (type === 'shift' || type === 'plantao') shiftCount++;
+        else if (type === 'consultation' || type === 'consulta') consultationCount++;
     }
     for (const rep of repasses) {
-        if (rep.status === 'consolidado') consolidatedRepasses.push(rep);
-        else if (rep.status === 'pendente') pendingRepasses.push(rep);
+        const status = rep.status?.toLowerCase();
+        if (status === 'consolidated' || status === 'consolidado') consolidatedRepasses.push(rep);
+        else if (status === 'pending' || status === 'pendente') pendingRepasses.push(rep);
     }
-    const totalConsolidatedValue = consolidatedRepasses.reduce((acc, curr) => acc + Number(curr.valor), 0);
-    const totalPendingValue = pendingRepasses.reduce((acc, curr) => acc + Number(curr.valor), 0);
+    const totalConsolidatedValue = consolidatedRepasses.reduce((acc, curr) => acc + Number(curr.amount || curr.valor || 0), 0);
+    const totalPendingValue = pendingRepasses.reduce((acc, curr) => acc + Number(curr.amount || curr.valor || 0), 0);
 
     if (loading) {
         return (
@@ -91,12 +93,12 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
                 <Text variant="title" style={styles.sectionTitle}>Financeiro</Text>
                 <View style={[styles.statsRow, { marginBottom: 20 }]}>
                     <View style={[styles.statCard, { backgroundColor: '#e8f5e9' }]}>
-                        <Text variant="caption">Consolidado</Text>
+                        <Text variant="caption">Consolidated</Text>
                         <Text variant="title" style={{ color: '#2e7d32' }}>R$ {totalConsolidatedValue.toFixed(2)}</Text>
                         <Text variant="caption">{consolidatedRepasses.length} repasses</Text>
                     </View>
                     <View style={[styles.statCard, { backgroundColor: '#e3f2fd' }]}>
-                        <Text variant="caption">Pendente</Text>
+                        <Text variant="caption">Pending</Text>
                         <Text variant="title" style={{ color: '#1565c0' }}>R$ {totalPendingValue.toFixed(2)}</Text>
                         <Text variant="caption">{pendingRepasses.length} repasses</Text>
                     </View>
@@ -111,13 +113,13 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
                     </View>
                     <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
                     <View style={{alignItems: 'center'}}>
-                        <Text variant="body">Plantões</Text>
-                        <Text variant="body" style={{fontWeight: 'bold'}}>{plantaoCount}</Text>
+                        <Text variant="body">Shifts</Text>
+                        <Text variant="body" style={{fontWeight: 'bold'}}>{shiftCount}</Text>
                     </View>
                      <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
                     <View style={{alignItems: 'center'}}>
-                        <Text variant="body">Consultas</Text>
-                        <Text variant="body" style={{fontWeight: 'bold'}}>{consultaCount}</Text>
+                        <Text variant="body">Consultations</Text>
+                        <Text variant="body" style={{fontWeight: 'bold'}}>{consultationCount}</Text>
                     </View>
                 </View>
 
