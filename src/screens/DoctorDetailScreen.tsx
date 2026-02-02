@@ -7,6 +7,7 @@ import { Button } from '../components/atoms/Button';
 import { doctorsService, Doctor } from '../services/doctors.service';
 import { productionsService, Production } from '../services/productions.service';
 import { repassesService, RepasseStats } from '../services/repasses.service';
+import { formatProductionType } from '../utils/formatters';
 
 export const DoctorDetailScreen = ({ route, navigation }: any) => {
     const { doctorId } = route.params;
@@ -73,12 +74,12 @@ export const DoctorDetailScreen = ({ route, navigation }: any) => {
                 {stats && (
                     <View style={styles.statsContainer}>
                         <View style={[styles.statCard, { backgroundColor: '#e3f2fd' }]}>
-                            <Text variant="caption">Pending</Text>
+                            <Text variant="caption">Pendente</Text>
                             <Text variant="title" style={{ color: '#1565c0' }}>{stats.total_pending_count || stats.total_pendente_qtd}</Text>
                             <Text variant="body">R$ {stats.total_pending_value || stats.total_pendente_valor}</Text>
                         </View>
                         <View style={[styles.statCard, { backgroundColor: '#e8f5e9' }]}>
-                             <Text variant="caption">Consolidated</Text>
+                             <Text variant="caption">Consolidado</Text>
                             <Text variant="title" style={{ color: '#2e7d32' }}>{stats.total_consolidated_count || stats.total_consolidado_qtd}</Text>
                             <Text variant="body">R$ {stats.total_consolidated_value || stats.total_consolidado_valor}</Text>
                         </View>
@@ -93,7 +94,7 @@ export const DoctorDetailScreen = ({ route, navigation }: any) => {
                     productions.map((item) => (
                         <View key={item.id} style={styles.productionItem}>
                             <View>
-                                <Text variant="body" style={{ fontWeight: 'bold' }}>{item.type.toUpperCase()}</Text>
+                                <Text variant="body" style={{ fontWeight: 'bold' }}>{formatProductionType(item.type)}</Text>
                                 <Text variant="caption">{new Date(item.date).toLocaleDateString()}</Text>
                             </View>
                             {/* You could add functionality here to go to specific production detail if it existed */}

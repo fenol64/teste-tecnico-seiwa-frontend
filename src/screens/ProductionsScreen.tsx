@@ -7,6 +7,7 @@ import { Button } from '../components/atoms/Button';
 import { productionsService, Production } from '../services/productions.service';
 import { doctorsService } from '../services/doctors.service';
 import { hospitalsService } from '../services/hospitals.service';
+import { formatProductionType } from '../utils/formatters';
 
 export const ProductionsScreen: React.FC<any> = ({ navigation }) => {
   const [data, setData] = useState<Production[]>([]);
@@ -50,7 +51,7 @@ export const ProductionsScreen: React.FC<any> = ({ navigation }) => {
        <View style={styles.header}>
         <Button label="Voltar" variant="outline" onPress={() => navigation.goBack()} />
         <Text variant="title">Produções</Text>
-        <Button label="Nova" onPress={() => console.log('Add Production')} />
+        <Button label="Nova" onPress={() => navigation.navigate('ProductionCreate')} />
       </View>
       {loading ? <ActivityIndicator style={{marginTop: 20}} /> : (
         <FlatList
@@ -60,7 +61,7 @@ export const ProductionsScreen: React.FC<any> = ({ navigation }) => {
           renderItem={({ item }) => (
             <View style={styles.card}>
               <View style={styles.row}>
-                <Text style={styles.typeBadge}>{item.type.toUpperCase()}</Text>
+                <Text style={styles.typeBadge}>{formatProductionType(item.type)}</Text>
                 <Text style={styles.date}>{new Date(item.date).toLocaleDateString()}</Text>
               </View>
               {item.description && <Text style={styles.desc}>{item.description}</Text>}

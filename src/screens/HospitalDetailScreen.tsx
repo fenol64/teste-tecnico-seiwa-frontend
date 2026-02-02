@@ -93,12 +93,12 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
                 <Text variant="title" style={styles.sectionTitle}>Financeiro</Text>
                 <View style={[styles.statsRow, { marginBottom: 20 }]}>
                     <View style={[styles.statCard, { backgroundColor: '#e8f5e9' }]}>
-                        <Text variant="caption">Consolidated</Text>
+                        <Text variant="caption">Consolidado</Text>
                         <Text variant="title" style={{ color: '#2e7d32' }}>R$ {totalConsolidatedValue.toFixed(2)}</Text>
                         <Text variant="caption">{consolidatedRepasses.length} repasses</Text>
                     </View>
                     <View style={[styles.statCard, { backgroundColor: '#e3f2fd' }]}>
-                        <Text variant="caption">Pending</Text>
+                        <Text variant="caption">Pendente</Text>
                         <Text variant="title" style={{ color: '#1565c0' }}>R$ {totalPendingValue.toFixed(2)}</Text>
                         <Text variant="caption">{pendingRepasses.length} repasses</Text>
                     </View>
@@ -113,12 +113,12 @@ export const HospitalDetailScreen = ({ route, navigation }: any) => {
                     </View>
                     <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
                     <View style={{alignItems: 'center'}}>
-                        <Text variant="body">Shifts</Text>
+                        <Text variant="body">Plantões</Text>
                         <Text variant="body" style={{fontWeight: 'bold'}}>{shiftCount}</Text>
                     </View>
                      <View style={{width: 1, height: 40, backgroundColor: '#eee'}} />
                     <View style={{alignItems: 'center'}}>
-                        <Text variant="body">Consultations</Text>
+                        <Text variant="body">Consultas</Text>
                         <Text variant="body" style={{fontWeight: 'bold'}}>{consultationCount}</Text>
                     </View>
                 </View>

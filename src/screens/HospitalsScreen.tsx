@@ -9,22 +9,51 @@ import { hospitalsService, Hospital } from '../services/hospitals.service';
 export const HospitalsScreen: React.FC<any> = ({ navigation }) => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    loadData();
+    loadData(1);
   }, []);
 
-  const loadData = async () => {
+  const loadData = async (pageToLoad = 1) => {
     try {
-      setLoading(true);
-      const res = await hospitalsService.getAll();
-      setHospitals(res.items);
+      if (pageToLoad === 1) setLoading(true);
+      else setLoadingMore(true);
+
+      const res = await hospitalsService.getAll(pageToLoad);
+
+      if (pageToLoad === 1) {
+        setHospitals(res.items);
+      } else {
+        setHospitals(prev => [...prev, ...res.items]);
+      }
+
+      setTotalPages(res.total_pages);
+      setPage(pageToLoad);
     } catch (e) {
       if(Platform.OS === 'web') window.alert('Erro ao carregar hospitais');
       else Alert.alert('Erro', 'Falha ao buscar hospitais');
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && page < totalPages) {
+      loadData(page + 1);
+    }
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={{ padding: 10 }}>
+        <ActivityIndicator size="small" color={theme.colors.primary} />
+      </View>
+    );
   };
 
   return (
@@ -32,7 +61,7 @@ export const HospitalsScreen: React.FC<any> = ({ navigation }) => {
        <View style={styles.header}>
         <Button label="Voltar" variant="outline" onPress={() => navigation.goBack()} />
         <Text variant="title">Hospitais</Text>
-        <Button label="Novo" onPress={() => console.log('Add Hospital')} />
+        <Button label="Novo" onPress={() => navigation.navigate('HospitalCreate')} />
       </View>
       {loading ? <ActivityIndicator style={{marginTop: 20}} /> : (
         <FlatList
@@ -45,6 +74,9 @@ export const HospitalsScreen: React.FC<any> = ({ navigation }) => {
               <Text variant="caption">{item.address}</Text>
             </TouchableOpacity>
           )}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
         />
       )}
     </SafeAreaView>

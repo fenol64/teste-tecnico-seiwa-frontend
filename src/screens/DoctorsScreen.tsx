@@ -9,12 +9,25 @@ import { doctorsService, Doctor } from '../services/doctors.service';
 export const DoctorsScreen: React.FC<any> = ({ navigation }) => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = async (pageToLoad = 1) => {
     try {
-      setLoading(true);
-      const response = await doctorsService.getAll();
-      setDoctors(response.items);
+      if (pageToLoad === 1) setLoading(true);
+      else setLoadingMore(true);
+
+      const response = await doctorsService.getAll(pageToLoad);
+
+      if (pageToLoad === 1) {
+        setDoctors(response.items);
+      } else {
+        setDoctors(prev => [...prev, ...response.items]);
+      }
+
+      setTotalPages(response.total_pages);
+      setPage(pageToLoad);
     } catch (error) {
        if (Platform.OS === 'web') {
         window.alert('Falha ao buscar médicos');
@@ -23,12 +36,29 @@ export const DoctorsScreen: React.FC<any> = ({ navigation }) => {
        }
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   useEffect(() => {
-    fetchDoctors();
+    fetchDoctors(1);
   }, []);
+
+  const handleLoadMore = () => {
+    if (!loadingMore && page < totalPages) {
+      fetchDoctors(page + 1);
+    }
+  };
+
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+    return (
+      <View style={{ padding: 10 }}>
+        <ActivityIndicator size="small" color={theme.colors.primary} />
+      </View>
+    );
+  };
+
 
   const renderItem = ({ item }: { item: Doctor }) => (
     <TouchableOpacity style={styles.itemCard} onPress={() => navigation.navigate('DoctorDetail', { doctorId: item.id })}>
@@ -49,7 +79,7 @@ export const DoctorsScreen: React.FC<any> = ({ navigation }) => {
       <View style={styles.header}>
         <Button label="Voltar" variant="outline" onPress={() => navigation.goBack()} />
         <Text variant="title">Médicos</Text>
-        <Button label="Novo" onPress={() => console.log('Add Doctor')} />
+        <Button label="Novo" onPress={() => navigation.navigate('DoctorCreate')} />
       </View>
 
       {loading ? (
@@ -61,6 +91,9 @@ export const DoctorsScreen: React.FC<any> = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           ListEmptyComponent={<Text style={styles.empty}>Nenhum médico encontrado.</Text>}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
         />
       )}
     </SafeAreaView>

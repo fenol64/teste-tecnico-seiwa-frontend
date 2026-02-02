@@ -47,6 +47,19 @@ export const doctorsService = {
     return response.data;
   },
 
+  async assignHospital(doctorId: string, hospitalId: string): Promise<void> {
+    await api.post(`/doctors/${doctorId}/hospitals/${hospitalId}`);
+  },
+
+  async removeHospital(doctorId: string, hospitalId: string): Promise<void> {
+    await api.delete(`/doctors/${doctorId}/hospitals/${hospitalId}`);
+  },
+
+  async getHospitals(doctorId: string): Promise<any[]> {
+    const response = await api.get(`/doctors/${doctorId}/hospitals`);
+    return response.data;
+  },
+
   async delete(id: string): Promise<void> {
     await api.delete(`/doctors/${id}`);
   },

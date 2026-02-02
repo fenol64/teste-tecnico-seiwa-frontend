@@ -9,7 +9,10 @@ import { ProductionsScreen } from './src/screens/ProductionsScreen';
 import { RepassesScreen } from './src/screens/RepassesScreen';
 import { RepasseDetailScreen } from './src/screens/RepasseDetailScreen';
 import { DoctorDetailScreen } from './src/screens/DoctorDetailScreen';
+import { DoctorCreateScreen } from './src/screens/DoctorCreateScreen';
+import { HospitalCreateScreen } from './src/screens/HospitalCreateScreen';
 import { HospitalDetailScreen } from './src/screens/HospitalDetailScreen';
+import { ProductionCreateScreen } from './src/screens/ProductionCreateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,10 +29,13 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Dashboard" component={DashboardScreen} />
         <Stack.Screen name="Doctors" component={DoctorsScreen} />
+        <Stack.Screen name="DoctorCreate" component={DoctorCreateScreen} />
         <Stack.Screen name="DoctorDetail" component={DoctorDetailScreen} />
         <Stack.Screen name="Hospitals" component={HospitalsScreen} />
+        <Stack.Screen name="HospitalCreate" component={HospitalCreateScreen} />
         <Stack.Screen name="HospitalDetail" component={HospitalDetailScreen} />
         <Stack.Screen name="Productions" component={ProductionsScreen} />
+        <Stack.Screen name="ProductionCreate" component={ProductionCreateScreen} />
         <Stack.Screen name="Repasses" component={RepassesScreen} />
         <Stack.Screen name="RepasseDetail" component={RepasseDetailScreen} />
       </Stack.Navigator>

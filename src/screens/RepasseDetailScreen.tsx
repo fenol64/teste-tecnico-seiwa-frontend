@@ -7,6 +7,7 @@ import { repassesService } from '../services/repasses.service';
 import { productionsService } from '../services/productions.service';
 import { doctorsService } from '../services/doctors.service';
 import { hospitalsService } from '../services/hospitals.service';
+import { formatProductionType, formatRepasseStatus } from '../utils/formatters';
 import { theme } from '../theme';
 
 export const RepasseDetailScreen = ({ route, navigation }: any) => {
@@ -81,7 +82,7 @@ export const RepasseDetailScreen = ({ route, navigation }: any) => {
 
                 <View style={styles.section}>
                     <Text variant="body" style={styles.label}>Produção</Text>
-                    <Text variant="body">{details.production.type.toUpperCase()}</Text>
+                    <Text variant="body">{formatProductionType(details.production.type)}</Text>
                      <Text variant="caption">{new Date(details.production.date).toLocaleDateString()}</Text>
                 </View>
 
@@ -89,7 +90,7 @@ export const RepasseDetailScreen = ({ route, navigation }: any) => {
                     <Text variant="body" style={styles.label}>Informações do Repasse</Text>
                     <Text variant="title" style={{color: theme.colors.primary}}>R$ {repAmount}</Text>
                     <Text variant="body" style={{ color: isConsolidated ? 'green' : 'orange', fontWeight: 'bold', marginTop: 8 }}>
-                        {details.repasse.status.toUpperCase()}
+                        {formatRepasseStatus(details.repasse.status)}
                     </Text>
                 </View>
 

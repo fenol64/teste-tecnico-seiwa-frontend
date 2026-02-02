@@ -6,6 +6,7 @@ import { Text } from '../components/atoms/Text';
 import { Button } from '../components/atoms/Button';
 import { repassesService, Repasse } from '../services/repasses.service';
 import { productionsService } from '../services/productions.service';
+import { formatProductionType, formatRepasseStatus } from '../utils/formatters';
 
 export const RepassesScreen: React.FC<any> = ({ navigation }) => {
   const [data, setData] = useState<Repasse[]>([]);
@@ -28,7 +29,7 @@ export const RepassesScreen: React.FC<any> = ({ navigation }) => {
 
       const prodMap: Record<string, string> = {};
       prodRes.items.forEach(p => {
-        prodMap[p.id] = `${p.type.toUpperCase()} - ${new Date(p.date).toLocaleDateString()}`;
+        prodMap[p.id] = `${formatProductionType(p.type)} - ${new Date(p.date).toLocaleDateString()}`;
       });
       setProductions(prodMap);
 
@@ -62,7 +63,7 @@ export const RepassesScreen: React.FC<any> = ({ navigation }) => {
                 <View style={styles.row}>
                   <Text style={styles.amount}>R$ {displayAmount}</Text>
                   <Text style={[styles.status, { color: isConsolidated ? 'green' : 'orange' }]}>
-                      {item.status.toUpperCase()}
+                      {formatRepasseStatus(item.status)}
                   </Text>
                 </View>
                 <Text variant="caption">
