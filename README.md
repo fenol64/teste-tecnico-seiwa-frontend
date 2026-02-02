@@ -4,6 +4,11 @@ Este repositório contém o código-fonte do frontend para o teste técnico da S
 
 A aplicação permite que médicos e administradores visualizem produções, repasses, hospitais e informações financeiras consolidadas.
 
+**usuário ja com dados poupulados pela seed**
+
+email: admin@seiwa.com<br>
+senha: 123456
+
 ### Funcionalidades
 
 - **Autenticação**: Login e Cadastro de usuários.
