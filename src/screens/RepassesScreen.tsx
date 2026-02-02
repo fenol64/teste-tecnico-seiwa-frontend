@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator, Alert, Platform, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../theme';
 import { Text } from '../components/atoms/Text';
 import { Button } from '../components/atoms/Button';
@@ -60,15 +61,18 @@ export const RepassesScreen: React.FC<any> = ({ navigation }) => {
 
             return (
               <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('RepasseDetail', { repasseId: item.id })}>
-                <View style={styles.row}>
-                  <Text style={styles.amount}>R$ {displayAmount}</Text>
-                  <Text style={[styles.status, { color: isConsolidated ? 'green' : 'orange' }]}>
-                      {formatRepasseStatus(item.status)}
-                  </Text>
+                <View style={styles.mainRow}>
+                  <View style={styles.content}>
+                    <Text style={[styles.status, { color: isConsolidated ? 'green' : 'orange', marginBottom: 4 }]}>
+                        {formatRepasseStatus(item.status)}
+                    </Text>
+                    <Text style={styles.amount}>R$ {displayAmount}</Text>
+                    <Text variant="caption">
+                      Produção: {productions[item.production_id] || 'unknown'}
+                    </Text>
+                  </View>
+                  <MaterialIcons name="chevron-right" size={24} color={theme.colors.textSecondary} />
                 </View>
-                <Text variant="caption">
-                  Produção: {productions[item.production_id] || 'unknown'}
-                </Text>
               </TouchableOpacity>
             );
           }}
@@ -94,7 +98,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.m,
     marginBottom: theme.spacing.s,
   },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' },
-  amount: { fontWeight: 'bold', fontSize: 18 },
+  mainRow: { flexDirection: 'row', alignItems: 'center' },
+  content: { flex: 1 },
+  amount: { fontWeight: 'bold', fontSize: 18, marginBottom: 4 },
   status: { fontWeight: '600', fontSize: 12 },
 });

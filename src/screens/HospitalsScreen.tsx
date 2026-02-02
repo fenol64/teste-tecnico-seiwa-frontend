@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator, Alert, Platform, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../theme';
 import { Text } from '../components/atoms/Text';
 import { Button } from '../components/atoms/Button';
@@ -70,8 +71,13 @@ export const HospitalsScreen: React.FC<any> = ({ navigation }) => {
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('HospitalDetail', { hospitalId: item.id })}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text variant="caption">{item.address}</Text>
+              <View style={styles.row}>
+                <View style={styles.info}>
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Text variant="caption">{item.address}</Text>
+                </View>
+                <MaterialIcons name="chevron-right" size={24} color={theme.colors.textSecondary} />
+              </View>
             </TouchableOpacity>
           )}
           onEndReached={handleLoadMore}
@@ -100,4 +106,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.s,
   },
   name: { fontWeight: 'bold', fontSize: 16, marginBottom: 4 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  info: { flex: 1 },
 });

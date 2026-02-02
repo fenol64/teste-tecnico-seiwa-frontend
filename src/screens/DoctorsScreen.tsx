@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList, ActivityIndicator, Alert, Platform, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../theme';
 import { Text } from '../components/atoms/Text';
 import { Button } from '../components/atoms/Button';
@@ -70,6 +71,7 @@ export const DoctorsScreen: React.FC<any> = ({ navigation }) => {
             <Text variant="body" style={styles.name}>{item.name}</Text>
             <Text variant="caption">{item.specialty} • CRM: {item.crm}</Text>
         </View>
+        <MaterialIcons name="chevron-right" size={24} color={theme.colors.textSecondary} />
       </View>
     </TouchableOpacity>
   );
