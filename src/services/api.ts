@@ -4,7 +4,8 @@ import axios from 'axios';
 // For Android Emulator use 'http://10.0.2.2:8000'
 // For iOS Simulator use 'http://localhost:8000'
 // For Physical Device use your machine's LAN IP
-const API_URL = process.env.API_URL || 'https://api-seiwa.fenol64.com.br/api/v1'
+// const API_URL = process.env.API_URL || 'https://api-seiwa.fenol64.com.br/api/v1'
+const API_URL = process.env.API_URL || 'http://localhost:8000/api/v1'
 
 console.log(`API URL: ${API_URL}`);
 
